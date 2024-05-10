@@ -18,11 +18,18 @@ import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.mercadopago.MercadoPagoConfig;
+import com.mercadopago.client.common.IdentificationRequest;
+import com.mercadopago.client.payment.PaymentClient;
+import com.mercadopago.client.payment.PaymentCreateRequest;
+import com.mercadopago.client.payment.PaymentPayerRequest;
 import com.mercadopago.client.preference.PreferenceBackUrlsRequest;
 import com.mercadopago.client.preference.PreferenceClient;
 import com.mercadopago.client.preference.PreferenceItemRequest;
 import com.mercadopago.client.preference.PreferencePaymentMethodsRequest;
 import com.mercadopago.client.preference.PreferenceRequest;
+import com.mercadopago.exceptions.MPApiException;
+import com.mercadopago.exceptions.MPException;
+import com.mercadopago.resources.payment.Payment;
 import com.mercadopago.resources.preference.Preference;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -87,7 +94,7 @@ public class PaymentController {
     @GetMapping("/qr")
     public void geraQRcode(HttpServletResponse response) throws IOException, WriterException {
 
-        String sourceQRcode = generateQRCode();
+        String sourceQRcode = testTestes();
 
         BitMatrix bitMatrix = new MultiFormatWriter().encode(sourceQRcode, BarcodeFormat.QR_CODE, 200, 200);
 
@@ -106,6 +113,38 @@ public class PaymentController {
         responseOutputStream.flush();
         responseOutputStream.close();
 
+    }
+
+    @GetMapping("pay")
+    public void redirectUrl(HttpServletResponse response) throws IOException {
+        String url = generateQRCode();
+
+        response.sendRedirect(url);
+    }
+
+    @GetMapping("t")
+    public String testTestes() {
+        MercadoPagoConfig.setAccessToken(token);
+        PaymentClient paymentClient = new PaymentClient();
+
+        PaymentCreateRequest paymentCreateRequest = PaymentCreateRequest.builder()
+                .transactionAmount(new BigDecimal(10))
+                .description("Teste")
+                .paymentMethodId("pix")
+                .payer(
+                        PaymentPayerRequest.builder()
+                                .email("teste@test.com")
+                                .firstName("ze da mina ")
+                                .lastName("Abandonada")
+                                .build())
+                .build();
+
+        try {
+            Payment createdPayment = paymentClient.create(paymentCreateRequest);
+            return createdPayment.getPointOfInteraction().getTransactionData().getQrCode();
+        } catch (MPException | MPApiException e) {
+            return e.getMessage();
+        }
     }
 
 }
