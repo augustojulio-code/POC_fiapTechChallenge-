@@ -18,7 +18,6 @@ import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.mercadopago.MercadoPagoConfig;
-import com.mercadopago.client.common.IdentificationRequest;
 import com.mercadopago.client.payment.PaymentClient;
 import com.mercadopago.client.payment.PaymentCreateRequest;
 import com.mercadopago.client.payment.PaymentPayerRequest;
@@ -96,7 +95,7 @@ public class PaymentController {
 
         String sourceQRcode = testTestes();
 
-        BitMatrix bitMatrix = new MultiFormatWriter().encode(sourceQRcode, BarcodeFormat.QR_CODE, 200, 200);
+        BitMatrix bitMatrix = new MultiFormatWriter().encode(sourceQRcode, BarcodeFormat.QR_CODE, 450, 450);
 
         // Converte o BitMatrix em uma imagem PNG
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
