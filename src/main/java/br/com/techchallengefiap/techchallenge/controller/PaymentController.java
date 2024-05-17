@@ -31,6 +31,7 @@ import com.mercadopago.exceptions.MPException;
 import com.mercadopago.resources.payment.Payment;
 import com.mercadopago.resources.preference.Preference;
 
+import br.com.techchallengefiap.techchallenge.domain.User;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
@@ -43,8 +44,9 @@ public class PaymentController {
     PreferenceClient preferenceClient = new PreferenceClient();
 
     @GetMapping("p")
-    public String generateQRCode() {
+    public String generateQRCode(User user) {
 
+        user = new User("12345678974", "mail@mail.com", new BigDecimal("200"));
         // Configura chave acesso de teste da conta mercado pago
         MercadoPagoConfig.setAccessToken(token);
 
@@ -54,7 +56,7 @@ public class PaymentController {
                     .id("1")
                     .title("teste teste")
                     .quantity(2)
-                    .unitPrice(new BigDecimal("10"))
+                    .unitPrice(user.getAmount())
                     .currencyId("BRL")
                     .build();
 
@@ -116,9 +118,9 @@ public class PaymentController {
 
     @GetMapping("pay")
     public void redirectUrl(HttpServletResponse response) throws IOException {
-        String url = generateQRCode();
+        // String url = generateQRCode();
 
-        response.sendRedirect(url);
+        // response.sendRedirect(url);
     }
 
     @GetMapping("t")

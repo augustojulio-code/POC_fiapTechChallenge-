@@ -1,17 +1,21 @@
 package br.com.techchallengefiap.techchallenge.domain;
 
+import java.math.BigDecimal;
+
 public class User {
 
     private String CPF;
     private String email;
+    private BigDecimal amount;
 
     public User() {
 
     }
 
-    public User(String CPF, String email) {
+    public User(String CPF, String email, BigDecimal amount) {
         this.CPF = CPF;
         this.email = email;
+        this.amount = amount;
     }
 
     public String getCPF() {
@@ -28,6 +32,14 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
     }
 
     @Override
