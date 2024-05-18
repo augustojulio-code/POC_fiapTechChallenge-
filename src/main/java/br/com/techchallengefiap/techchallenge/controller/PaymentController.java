@@ -117,10 +117,12 @@ public class PaymentController {
     }
 
     @GetMapping("pay")
-    public void redirectUrl(HttpServletResponse response) throws IOException {
-        // String url = generateQRCode();
+    public void redirectUrl(HttpServletResponse response, User user) throws IOException {
+        String url = generateQRCode(user);
 
-        // response.sendRedirect(url);
+        response.sendRedirect(url);
+
+        System.out.println("atualiza pedido");
     }
 
     @GetMapping("t")
